@@ -1,0 +1,164 @@
+{
+  "name": "@economist/win-website",
+  "private": true,
+  "version": "1.0.0",
+  "description": "The World in website",
+  "author": "The Economist (http://economist.com)",
+  "license": "MIT",
+  "repository": "git://github.com/the-economist-editorial/win-website.git",
+  "homepage": "https://github.com/the-economist-editorial/win-website#readme",
+  "bugs": "https://github.com/the-economist-editorial/win-website/issues",
+  "main": "server.js",
+  "files": [
+    "*.js",
+    "*.css",
+    "assets/*",
+    "!karma.conf.js",
+    "!testbundle.js"
+  ],
+  "assets": [],
+  "browserify": {
+    "transform": [
+      "babelify"
+    ]
+  },
+  "config": {
+    "postcss": "-u postcss-import -u postcss-cssnext -u cssnano -u postcss-reporter",
+    "lint_opts": "--ignore-path .gitignore",
+    "server": {
+      "port": 8080,
+      "compression": true,
+      "logger": {
+        "name": "win-web"
+      },
+      "proxy": {
+        "url": "http://cms-worldin.economist.com/contentasjson/"
+      },
+      "cache": {
+        "ttl": 30000
+      },
+      "stats": {
+        "buildNumber": "__dev__",
+        "commitId": "__dev__",
+        "builtAt": "2016-04-21T14:09:33.649Z"
+      },
+      "manifest": {
+        "uri": "application.manifest",
+        "directories": [
+          {
+            "directory": "assets",
+            "uri": "assets",
+            "only": "\\.(js|css|svg)$"
+          }
+        ]
+      },
+      "staticAssets": {
+        "acceptWebp": true,
+        "uri": "assets",
+        "directory": "assets"
+      }
+    }
+  },
+  "babel": {
+    "stage": 0,
+    "loose": "all",
+    "compact": false,
+    "ignore": "node_modules"
+  },
+  "eslintConfig": {
+    "parser": "babel-eslint",
+    "extends": [
+      "strict",
+      "strict-react"
+    ]
+  },
+  "stylelint": {
+    "extends": [
+      "stylelint-config-strict"
+    ]
+  },
+  "scripts": {
+    "assets": "git checkout -- assets/favicon.ico && git checkout -- assets/world-in-logo.svg",
+    "prepare": "npm-run-all --serial prebuild:* build",
+    "start": "([ \"$NODE_ENV\" != \"production\" ] && npm run prepare); node server.js",
+    "clean": "rm assets.json && rm assets/* && rm *.js",
+    "prebuild": "echo {} > assets.json",
+    "prebuild:assets": "npm-assets .",
+    "build": "npm-run-all --serial build:* version",
+    "build:babel": "babel src --out-dir .",
+    "build:js": "npm-run-all --parallel build:js:client build:js:vendor",
+    "build:js:vendor": "browserify `test \"$NODE_ENV\" != \"production\" && echo '-d'` -g envify -g uglifyify -r babel-polyfill -r react -r react-dom -r react/lib/ReactUpdates | hashmark -l 8 -m assets.json -n vendor 'assets/{hash}.js'",
+    "build:js:client": "browserify `test \"$NODE_ENV\" != \"production\" && echo '-d'` -g envify -g uglifyify -x babel-polyfill -x react -x react-dom -x react/lib/ReactUpdates client.js | hashmark -l 8 -m assets.json -n client 'assets/{hash}.js'",
+    "build:css": "postcss $npm_package_config_postcss src/index.css | hashmark -l 8 -m assets.json -n style 'assets/{hash}.css'",
+    "test": "exit 0; # no tests yet! npm run test:base -- -R tap",
+    "test:base": "mocha",
+    "test:watch": "npm run test:base -- -wR min",
+    "version": "json -f package.json -IAe \"var stats = this.config.server.stats; stats.buildNumber='${CI_BUILD_NUMBER:-__dev__}';stats.commitId='${CI_COMMIT_ID:-__dev__}';stats.builtAt=new Date().toJSON()\"",
+    "lint": "eslint $npm_package_config_lint_opts ."
+  },
+  "dependencies": {
+    "@economist/component-404": "^3.0.1",
+    "@economist/component-cookie-message": "^3.0.0",
+    "@economist/component-footer": "^4.0.1",
+    "@economist/component-header": "^3.3.1",
+    "@economist/component-icon": "^5.11.0",
+    "@economist/component-loading": "^2.0.1",
+    "@economist/component-picture": "^1.2.1",
+    "@economist/component-react-async-container": "^1.3.0",
+    "@economist/component-typography": "^3.1.4",
+    "@economist/connect-api-proxy-middleware": "^1.3.0",
+    "@economist/connect-react-html-template": "^1.1.0",
+    "@economist/react-i13n-omniture": "^1.4.3",
+    "@economist/standard-server": "^1.0.0",
+    "babel": "^5.8.34",
+    "fs-promise": "^0.5.0",
+    "http-status": "^0.2.2",
+    "isomorphic-fetch": "^2.2.1",
+    "lodash.zipobject": "^4.1.3",
+    "moment-timezone": "^0.5.3",
+    "normalize.css": "^4.1.1",
+    "react": "^0.14.8",
+    "react-dom": "^0.14.7",
+    "react-i13n": "^2.0.13",
+    "react-router": "^2.2.4",
+    "serialize-javascript": "^1.1.2",
+    "slugger": "^1.0.1",
+    "svg4everybody": "^2.0.0",
+    "traverse": "^0.6.6",
+    "url-pattern": "^0.10.2",
+    "urllite": "^0.5.0"
+  },
+  "devDependencies": {
+    "babel": "^5.8.34",
+    "babel-eslint": "^6.0.2",
+    "babel-polyfill": "^6.6.1",
+    "babelify": "^6.4.0",
+    "browserify": "^13.0.0",
+    "bunyan": "^1.5.1",
+    "cssnano": "^3.4.0",
+    "envify": "^3.4.0",
+    "eslint": "^2.8.0",
+    "eslint-config-strict": "^8.5.1",
+    "eslint-config-strict-react": "^8.0.1",
+    "eslint-plugin-filenames": "^0.2.0",
+    "eslint-plugin-react": "^4.3.0",
+    "hashmark": "^3.0.0",
+    "json": "^9.0.3",
+    "mocha": "^2.2.5",
+    "nodemon": "^1.4.0",
+    "npm-assets": "^0.1.1",
+    "npm-run-all": "^1.7.0",
+    "postcss": "^5.0.14",
+    "postcss-cli": "^2.4.0",
+    "postcss-cssnext": "^2.4.0",
+    "postcss-import": "^8.1.0",
+    "postcss-reporter": "^1.3.0",
+    "pre-commit": "^1.0.10",
+    "stylelint": "^5.4.0",
+    "stylelint-config-strict": "^4.0.0",
+    "uglifyify": "^3.0.1"
+  },
+  "pre-commit": [
+    "lint"
+  ]
+}
