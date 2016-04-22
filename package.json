@@ -1,27 +1,23 @@
 {
-  "name": "@economist/win-website",
+  "name": "@economist/wif-website",
   "private": true,
   "version": "1.0.0",
-  "description": "The World in website",
+  "description": "The World If website",
   "author": "The Economist (http://economist.com)",
   "license": "MIT",
-  "repository": "git://github.com/the-economist-editorial/win-website.git",
-  "homepage": "https://github.com/the-economist-editorial/win-website#readme",
-  "bugs": "https://github.com/the-economist-editorial/win-website/issues",
-  "main": "server.js",
+  "repository": "git://github.com/the-economist-editorial/wif-website.git",
+  "homepage": "https://github.com/the-economist-editorial/wif-website#readme",
+  "bugs": "https://github.com/the-economist-editorial/wif-website/issues",
+  "main": "lib/server.js",
   "files": [
     "*.js",
     "*.css",
     "assets/*",
+    "!src/assets/*",
     "!karma.conf.js",
     "!testbundle.js"
   ],
   "assets": [],
-  "browserify": {
-    "transform": [
-      "babelify"
-    ]
-  },
   "config": {
     "postcss": "-u postcss-import -u postcss-cssnext -u cssnano -u postcss-reporter",
     "lint_opts": "--ignore-path .gitignore",
@@ -29,7 +25,7 @@
       "port": 8080,
       "compression": true,
       "logger": {
-        "name": "win-web"
+        "name": "wif-website"
       },
       "proxy": {
         "url": "http://cms-worldin.economist.com/contentasjson/"
@@ -37,11 +33,7 @@
       "cache": {
         "ttl": 30000
       },
-      "stats": {
-        "buildNumber": "__dev__",
-        "commitId": "__dev__",
-        "builtAt": "2016-04-21T14:09:33.649Z"
-      },
+      "stats": {},
       "manifest": {
         "uri": "application.manifest",
         "directories": [
@@ -59,11 +51,16 @@
       }
     }
   },
+  "browserify": {
+    "transform": [
+      "babelify"
+    ]
+  },
   "babel": {
-    "stage": 0,
-    "loose": "all",
     "compact": false,
-    "ignore": "node_modules"
+    "ignore": "node_modules",
+    "loose": "all",
+    "stage": 0
   },
   "eslintConfig": {
     "parser": "babel-eslint",
@@ -80,15 +77,16 @@
   "scripts": {
     "assets": "git checkout -- assets/favicon.ico && git checkout -- assets/world-in-logo.svg",
     "prepare": "npm-run-all --serial prebuild:* build",
-    "start": "([ \"$NODE_ENV\" != \"production\" ] && npm run prepare); node server.js",
-    "clean": "rm assets.json && rm assets/* && rm *.js",
+    "start": "([ \"$NODE_ENV\" != \"production\" ] && npm run prepare); node lib/server.js",
+    "clean": "rm assets.json && rm -rf lib && rm -rf assets",
     "prebuild": "echo {} > assets.json",
-    "prebuild:assets": "npm-assets .",
+    "prebuild:assets": "npm-assets . && cp src/assets/* assets",
+    "prebuild:css": "mkdir -p lib",
+    "prebuild:babel": "babel src -d lib --source-maps inline",
     "build": "npm-run-all --serial build:* version",
-    "build:babel": "babel src --out-dir .",
-    "build:js": "npm-run-all --parallel build:js:client build:js:vendor",
-    "build:js:vendor": "browserify `test \"$NODE_ENV\" != \"production\" && echo '-d'` -g envify -g uglifyify -r babel-polyfill -r react -r react-dom -r react/lib/ReactUpdates | hashmark -l 8 -m assets.json -n vendor 'assets/{hash}.js'",
-    "build:js:client": "browserify `test \"$NODE_ENV\" != \"production\" && echo '-d'` -g envify -g uglifyify -x babel-polyfill -x react -x react-dom -x react/lib/ReactUpdates client.js | hashmark -l 8 -m assets.json -n client 'assets/{hash}.js'",
+    "build:js": "npm-run-all --parallel build:js:*",
+    "build:js:vendor": "browserify `test \"$NODE_ENV\" != \"production\" && echo '-d'` -g envify -g uglifyify -r react -r react-dom -r react/lib/ReactUpdates -r babel-polyfill | hashmark -l 8 -m assets.json -n vendor 'assets/{hash}.js'",
+    "build:js:client": "browserify `test \"$NODE_ENV\" != \"production\" && echo '-d'` -g envify -g uglifyify -x react -x react-dom -x react/lib/ReactUpdates -x babel-polyfill src/client.js | hashmark -l 8 -m assets.json -n client 'assets/{hash}.js'",
     "build:css": "postcss $npm_package_config_postcss src/index.css | hashmark -l 8 -m assets.json -n style 'assets/{hash}.css'",
     "test": "exit 0; # no tests yet! npm run test:base -- -R tap",
     "test:base": "mocha",
@@ -98,19 +96,23 @@
   },
   "dependencies": {
     "@economist/component-404": "^3.0.1",
+    "@economist/component-ad-panel": "^2.2.0",
+    "@economist/component-articletemplate": "^8.1.1",
     "@economist/component-cookie-message": "^3.0.0",
     "@economist/component-footer": "^4.0.1",
-    "@economist/component-header": "^3.3.1",
     "@economist/component-icon": "^5.11.0",
+    "@economist/component-imagecaption": "^2.0.0",
     "@economist/component-loading": "^2.0.1",
+    "@economist/component-navigation": "^5.4.0",
     "@economist/component-picture": "^1.2.1",
     "@economist/component-react-async-container": "^1.3.0",
+    "@economist/component-sections-card": "^3.2.0",
     "@economist/component-typography": "^3.1.4",
+    "@economist/component-video": "^1.1.0",
     "@economist/connect-api-proxy-middleware": "^1.3.0",
     "@economist/connect-react-html-template": "^1.1.0",
     "@economist/react-i13n-omniture": "^1.4.3",
     "@economist/standard-server": "^1.0.0",
-    "babel": "^5.8.34",
     "fs-promise": "^0.5.0",
     "http-status": "^0.2.2",
     "isomorphic-fetch": "^2.2.1",
@@ -120,12 +122,12 @@
     "react": "^0.14.8",
     "react-dom": "^0.14.7",
     "react-i13n": "^2.0.13",
-    "react-router": "^2.2.4",
+    "react-router": "~2.0.0-rc5",
     "serialize-javascript": "^1.1.2",
     "slugger": "^1.0.1",
     "svg4everybody": "^2.0.0",
     "traverse": "^0.6.6",
-    "url-pattern": "^0.10.2",
+    "url-pattern": "^1.0.1",
     "urllite": "^0.5.0"
   },
   "devDependencies": {
@@ -141,7 +143,7 @@
     "eslint-config-strict": "^8.5.1",
     "eslint-config-strict-react": "^8.0.1",
     "eslint-plugin-filenames": "^0.2.0",
-    "eslint-plugin-react": "^4.3.0",
+    "eslint-plugin-react": "^5.0.1",
     "hashmark": "^3.0.0",
     "json": "^9.0.3",
     "mocha": "^2.2.5",
@@ -154,7 +156,7 @@
     "postcss-import": "^8.1.0",
     "postcss-reporter": "^1.3.0",
     "pre-commit": "^1.0.10",
-    "stylelint": "^5.4.0",
+    "stylelint": "^6.0.3",
     "stylelint-config-strict": "^4.0.0",
     "uglifyify": "^3.0.1"
   },

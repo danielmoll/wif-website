@@ -1,9 +1,25 @@
 @import 'normalize.css';
-@import '@economist/component-header';
+@import '@economist/component-navigation';
 @import '@economist/component-footer';
 @import '@economist/component-typography';
 @import '@economist/component-404';
 @import '@economist/component-icon';
 @import '@economist/component-loading';
 @import '@economist/component-picture';
+@import '@economist/component-articletemplate';
+@import './homepage';
+@import './article';
 @import './cookie';
+
+/* stylelint-disable selector-no-type */
+
+body {
+  margin: 0;
+  font-smoothing: antialiased;
+}
+
+/* stylelint-enable selector-no-type */
+
+.navigation {
+  z-index: 10;
+}

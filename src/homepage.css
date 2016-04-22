@@ -1,0 +1,244 @@
+.homepage {
+  background-color: #121212;
+}
+
+.tiles__flytitle {
+  vertical-align: bottom;
+  margin: 0;
+  color: #fff;
+  font-family: EconSans;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  line-height: 24px;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.tiles__item:first-of-type .tiles__flytitle {
+  margin: 5px 0;
+  font-size: 48px;
+  line-height: 38px;
+}
+
+.tiles__rubric {
+  display: none;
+  max-width: 59.7%;
+  color: #fff;
+  font-family: EconSans;
+  font-size: 20px;
+  font-weight: normal;
+  line-height: 31px;
+  pointer-events: none;
+}
+
+.tiles__item:first-of-type .tiles__rubric {
+  display: block;
+  margin: 20px 0 0;
+}
+
+.tiles__section {
+  display: none;
+  margin: 0 0 5px;
+  color: #fff;
+  font-family: EconSans;
+  font-size: 26px;
+  font-weight: 300;
+  letter-spacing: 0.5px;
+  line-height: 26px;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.tiles__item:first-of-type .tiles__section {
+  display: block;
+}
+
+@media (max-width: 1024px) {
+  .tiles__flytitle {
+    font-size: 21px;
+    line-height: 20px;
+  }
+  .tiles__item:first-of-type .tiles__flytitle {
+    margin: 5px 0;
+    font-size: 30px;
+    line-height: 28px;
+  }
+  .tiles__rubric {
+    max-width: 80%;
+    font-size: 18px;
+    line-height: 27px;
+  }
+  .tiles__section {
+    font-size: 24px;
+    line-height: 24px;
+  }
+}
+
+@media (max-width: 560px) {
+  .tiles__flytitle {
+    font-size: 16px;
+    line-height: 16px;
+  }
+  .tiles__item:first-of-type .tiles__flytitle {
+    margin: 5px 0;
+    font-size: 22px;
+    line-height: 20px;
+  }
+  .tiles__rubric {
+    max-width: none;
+    font-size: 16px;
+    line-height: 24px;
+  }
+  .tiles__item:first-of-type .tiles__rubric {
+    display: block;
+    margin: 16px 0 0;
+  }
+  .tiles__section {
+    font-size: 20px;
+    line-height: 20px;
+  }
+}
+
+.tiles__flex-section-container {
+  display: flex;
+  width: 100%;
+  max-width: 1190px;
+  margin-right: auto;
+  margin-left: auto;
+  align-self: flex-start;
+  flex-direction: column;
+}
+
+.tiles__section-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tiles__flex-container {
+  overflow: hidden;
+  display: flex;
+  width: 100%;
+  margin: 0;
+  flex-flow: row wrap;
+  justify-content: space-between;
+}
+
+.tiles__item {
+  overflow: hidden;
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: 210px;
+  margin: 1.2% 0 0;
+  align-items: center;
+  flex-basis: 24%;
+  justify-content: center;
+  line-height: 0;
+}
+
+.tiles__item--third {
+  flex-basis: 32.5%;
+}
+
+.tiles__item--half {
+  flex-basis: 49.25%;
+}
+
+.tiles__item--single {
+  flex-basis: 100%;
+}
+
+.tiles__item:first-of-type {
+  width: 100%;
+  height: 297px;
+  margin: 1.2% 0 0;
+  flex-basis: 100%;
+}
+
+.tiles__item.hero {
+  height: 598px;
+}
+
+@media (max-width: 1024px) {
+  .tiles__item {
+    height: 185px;
+    flex-basis: 49.25%;
+  }
+  .tiles__item:first-of-type {
+    height: 272px;
+    flex-basis: 100%;
+  }
+  .tiles__item.hero {
+    height: 500px;
+  }
+}
+
+@media (max-width: 800px) {
+  .tiles__item--third {
+    flex-basis: 49.25%;
+  }
+  .tiles__item--third:last-of-type {
+    flex-basis: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  .tiles__item {
+    height: 145px;
+    margin: 2% 0 0;
+    flex-basis: 49%;
+  }
+  .tiles__item--third {
+    flex-basis: 49%;
+  }
+  .tiles__item--half {
+    flex-basis: 49%;
+  }
+  .tiles__item:first-of-type {
+    height: 232px;
+    margin: 2% 0 0;
+  }
+  .tiles__item.hero {
+    height: 450px;
+  }
+}
+
+.tiles__image-container {
+  position: relative;
+}
+
+.tiles__image-container .tiles__image {
+  width: 100%;
+}
+
+.tiles__image-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.2));
+}
+
+.tiles__item:hover .tiles__image-container::before {
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.1));
+}
+
+.tiles__content-container {
+  position: absolute;
+  top: auto;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 30px 30px 25px 30px;
+  text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
+}
+
+.tiles__item:first-of-type .tiles__content-container {
+  top: 0;
+}

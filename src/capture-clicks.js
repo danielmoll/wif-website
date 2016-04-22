@@ -55,7 +55,7 @@ export default class CaptureClicks extends React.Component {
     }
 
     event.preventDefault();
-    const urlWithOptionalHash = `${url.pathname}${url.hash}`;
+    const urlWithOptionalHash = `${ url.pathname }${ url.hash }`;
     this.navigate(urlWithOptionalHash);
   }
 

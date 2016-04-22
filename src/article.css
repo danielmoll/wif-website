@@ -1,0 +1,313 @@
+.article-template__header {
+  overflow: hidden;
+  display: flex;
+  position: relative;
+  width: 100%;
+  max-height: calc(100vh - 64px);
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 0;
+}
+
+.article-template__header-inner {
+  position: relative;
+  width: 100%;
+}
+
+.article-template__image {
+  position: relative;
+  width: 100%;
+}
+
+.article-template__header-content {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.article-template__section-name {
+  display: inline-block;
+  margin: 0 7.5%;
+  padding: 0 12px;
+  color: #fff;
+  font-family: EconSans;
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 26px;
+  text-transform: uppercase;
+  background: #e3120b;
+}
+
+.article-template__flytitle {
+  display: block;
+  margin: 22px 7.5% 0;
+  color: #e3120b;
+  font-family: EconSans;
+  font-size: 50px;
+  font-weight: 300;
+  line-height: 44px;
+  text-transform: uppercase;
+}
+
+.article-template__title {
+  margin: 0 7.5% 30px;
+  color: #fff;
+  font-family: EconSans;
+  font-size: 50px;
+  font-weight: 700;
+  line-height: 44px;
+  text-transform: uppercase;
+}
+
+@media screen and (max-width: 1190px) {
+  .article-template__section-name {
+    font-size: 18px;
+    line-height: 26px;
+  }
+  .article-template__flytitle {
+    margin: 20px 7.5% 0;
+    font-size: 42px;
+    line-height: 38px;
+  }
+  .article-template__title {
+    margin: 0 7.5% 28px;
+    font-size: 42px;
+    line-height: 38px;
+  }
+}
+
+@media screen and (max-width: 790px) {
+  .article-template__header {
+    position: static;
+    background: none;
+  }
+  .article-template__section-name {
+    padding: 0 10px;
+    font-size: 16px;
+    line-height: 24px;
+  }
+  .article-template__flytitle {
+    margin: 18px 7.5% 0;
+    font-size: 40px;
+    line-height: 38px;
+  }
+  .article-template__title {
+    margin: 0 7.5% 26px;
+    color: #313131;
+    font-size: 40px;
+    line-height: 38px;
+  }
+}
+
+@media screen and (max-width: 560px) {
+  .article-template__section-name {
+    padding: 0 8px;
+    font-size: 14px;
+    line-height: 22px;
+  }
+  .article-template__flytitle {
+    margin: 18px 7.5% 0;
+    font-size: 34px;
+    line-height: 32px;
+  }
+  .article-template__title {
+    margin: 0 7.5% 28.8px;
+    font-size: 34px;
+    line-height: 32px;
+  }
+}
+
+.article-template__subheader {
+  width: auto;
+  margin: 32px 0 32px;
+  padding-top: 0;
+  padding-left: 0;
+  border-left: 0;
+}
+
+.article-template__pubdate {
+  width: 57.9%;
+  margin: 0 7.5%;
+  color: #38a8e0;
+  font-family: EconSans;
+  font-size: 14px;
+  line-height: 30px;
+}
+
+.article-template__rubric {
+  width: 57.9%;
+  margin: 0 7.5%;
+  color: #313131;
+  font-family: EconSans;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 30px;
+}
+
+@media screen and (max-width: 860px) {
+  .article-template__pubdate {
+    width: auto;
+  }
+  .article-template__rubric {
+    width: auto;
+  }
+}
+
+@media screen and (max-width: 790px) {
+  .article-template__subheader {
+    margin: 0 0 32px;
+  }
+}
+
+@media screen and (max-width: 560px) {
+  .article-template__subheader {
+    margin: 0 0 28.8px;
+  }
+  .article-template__pubdate {
+    font-size: 13px;
+    line-height: 26.8px;
+  }
+  .article-template__rubric {
+    font-size: 17px;
+    line-height: 26.8px;
+  }
+}
+
+.article-template__section,
+.article-template__footer {
+  overflow: hidden;
+  width: 83.1%;
+  margin-left: 7.5%;
+}
+
+@media screen and (min-width: 860px) {
+  /* stylelint-disable selector-no-type */
+  .article-template__section {
+    width: 57.9%;
+  }
+  /* stylelint-enable selector-no-type */
+}
+
+.article-template__footer {
+  margin-bottom: 40px;
+}
+
+/* stylelint-disable selector-no-type */
+
+.article-template__section > p:first-of-type {
+  padding: 0;
+  border-left: none;
+}
+
+.article-template__section > p:first-of-type::first-letter {
+  float: left;
+  margin-left: -2px;
+  padding-top: 6px;
+  padding-right: 6px;
+  font-family: EconSans;
+  font-size: 65px;
+  font-weight: 700;
+  line-height: 55px;
+}
+
+.article-template__section p {
+  margin: 0 0 20px 0;
+  padding: 0;
+  color: #313131;
+  font-family: MiloSerifPro;
+  font-size: 20px;
+  font-style: normal;
+  line-height: 32px;
+}
+
+/* stylelint-enable selector-no-type */
+
+.article-template__crossheads {
+  width: 57.9%;
+  margin: 20px 0 7.5%;
+  padding: 0;
+}
+
+/* stylelint-disable selector-no-type */
+
+.article-template__crossheads p {
+  font-family: EconSans;
+  font-size: 23px;
+  font-weight: 700;
+}
+
+/* stylelint-enable selector-no-type */
+
+.article-template__bio,
+.article-template__byline-location {
+  float: left;
+  width: 100%;
+  color: #3c3c3c;
+  font-family: EconSans;
+  font-size: 14px;
+}
+
+.article-template__byline-location {
+  font-weight: bold;
+}
+
+.article-template__bio {
+  margin-bottom: 40px;
+}
+
+.article-template__byline-footer {
+  padding-top: 40px;
+}
+
+.article-template__byline-footer .article-template__byline {
+  display: inline-block;
+  width: auto;
+  margin: 0 0 0 3%;
+  padding: 5px 0 0 0;
+  border-top: 1px solid #ccc;
+}
+
+.article-template__byline-footer .article-template__byline::before {
+  content: 'by ';
+  float: left;
+  width: 24px;
+  color: #ccc;
+  font-family: Officina;
+  font-size: 20px;
+}
+
+.article-template .ad-panel__container {
+  text-align: center;
+}
+
+@media screen and (max-width: 560px) {
+  /* stylelint-disable selector-no-type */
+  .article-template__section > p:first-of-type::first-letter {
+    padding-top: 2.5px;
+    font-size: 57px;
+    line-height: 52px;
+  }
+  .article-template__section,
+  .article-template__footer {
+    margin: 0 7.5% 18px;
+  }
+  .article-template__section p {
+    width: auto;
+    font-size: 18px;
+    line-height: 28.8px;
+  }
+  /* stylelint-enable selector-no-type */
+  .article-template__crossheads {
+    width: auto;
+    margin: 0 7.5%;
+    padding: 0;
+  }
+  /* stylelint-disable selector-no-type */
+  .article-template__crossheads p {
+    font-size: 21px;
+  }
+  /* stylelint-enable selector-no-type */
+}

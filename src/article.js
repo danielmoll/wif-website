@@ -1,10 +1,15 @@
 import React from 'react';
-import pageTracker from '@economist/react-i13n-omniture/lib/pagetracker';
+import ArticleTemplate from '@economist/component-articletemplate';
+import ArticleBody from './article-body';
+import ArticleFooter from './article-footer';
+import ArticleHeader from './article-header';
+import ArticleSubHeader from './article-subheader';
 import Impart from '@economist/component-react-async-container';
 import cache from '@economist/component-react-async-container/cache';
 import fetch from 'isomorphic-fetch';
-import handleLoading from './loading-handler';
 import handleFailure from './failure-handler';
+import handleLoading from './loading-handler';
+import pageTracker from '@economist/react-i13n-omniture/lib/pagetracker';
 
 function fetchArticle({ id }) {
   return fetch(`/api/article/${ id }`).then((response) => (response.json()));
@@ -14,13 +19,22 @@ function cacheArticle({ id }) {
   return cache(`/api/article/${ id }`);
 }
 
-export function ArticlePage() {
+function Article(rest) {
+  const props = {
+    components: {
+      ArticleHeader,
+      ArticleSubHeader,
+      ArticleBody,
+      ArticleFooter,
+    },
+    ...rest,
+  };
   return (
-    <h1>Article page</h1>
+    <ArticleTemplate {...props} />
   );
 }
 
-const TrackedArticlePage = pageTracker(ArticlePage, {
+const TrackedArticlePage = pageTracker(Article, {
   template: 'article',
   topic(component) {
     return component.props.sectionName;
@@ -29,7 +43,7 @@ const TrackedArticlePage = pageTracker(ArticlePage, {
     return new Date(Date.parse(component.props.publishDate.raw));
   },
 });
-export default function ArticlePageWithData(props) {
+export default function ArticleWithData(props) {
   props = {
     ...props,
     id: props.params.id,
@@ -47,7 +61,7 @@ export default function ArticlePageWithData(props) {
 }
 
 if (process.env.NODE_ENV !== 'production') {
-  ArticlePageWithData.propTypes = {
+  ArticleWithData.propTypes = {
     params: React.PropTypes.shape({
       id: React.PropTypes.oneOfType([
         React.PropTypes.number,

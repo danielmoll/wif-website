@@ -1,10 +1,11 @@
+import 'babel-polyfill';
 import React from 'react';
 import { match, RouterContext } from 'react-router';
 import { createRoutesFromReactChildren } from 'react-router/lib/RouteUtils';
 import standardServer from '@economist/standard-server';
 import reactHtmlTemplate from '@economist/connect-react-html-template';
 import proxy from '@economist/connect-api-proxy-middleware';
-import assets from './assets';
+import assets from '../assets';
 import httpStatus from 'http-status';
 import moment from 'moment-timezone';
 import url from 'url';
@@ -16,8 +17,8 @@ import UrlPattern from 'url-pattern';
 import slugger from 'slugger';
 import fsp from 'fs-promise';
 import Routes from './routes';
-import NotFoundHandler from '@economist/component-404';
-import ArticlePageHandler from './articlepage';
+import NotFoundHandler from './not-found-handler';
+import Article from './article';
 const routes = createRoutesFromReactChildren([
   Routes,
 ]);
@@ -31,19 +32,18 @@ function formatDateAsString(date) {
 
 server.log.info(server.config, 'booting with config');
 server
-  .use('/content/homepage', (request, response, next) => {
-    return fsp.readJson('./homepage.json').then((contents) => {
+  .use('/content/homepage', (request, response, next) => (
+    fsp.readJson('./homepage.json').then((contents) => {
       response.end(JSON.stringify(contents));
-    })
-    .catch(next);
-  })
+    }).catch(next)
+  ))
   .use('/api/article', economistProxy('node', {
     headerOverrides: {
       'cache-control': 'public, max-age=60',
     },
     dataOverrides: (article) => ({
       id: article.data.id,
-      slug: article.data.attributes.slug,
+      slug: article.data.attributes.slug || slugger(article.data.attributes.title),
       title: article.data.attributes.title,
       flytitle: article.data.attributes.flytitle,
       rubric: article.data.attributes.rubric,
@@ -67,36 +67,9 @@ server
     },
     dataOverrides: (homepage) => ({
       metaTags: homepage.data.attributes.metaTags,
-      articles: homepage.included.map((article) => {
-        const href = (article.link) ? article.link : `/article/${ article.id }/${ slugger(article.attributes.slug) }`;
-        const articleId = parseInt(article.id, 10);
-        const articleData = {
-          type: (article.type || 'article').toLowerCase(),
-          teaserId: articleId,
-          image: article.attributes.mainimage,
-          section: article.attributes.section,
-          flyTitle: article.attributes.flytitle,
-          title: article.attributes.title,
-          link: {
-            href,
-          },
-          text: article.attributes.teaserContent || article.attributes.content[0],
-          publishDate: {
-            raw: article.attributes.publishDate,
-            formatted: formatDateAsString(article.attributes.publishDate),
-          },
-        };
-        return articleData;
-      }),
+      content: homepage.data.attributes.content,
     }),
   }))
-  .use('/node', (request, response) => {
-    response.writeHead(httpStatus.MOVED_PERMANENTLY, {
-      'location': `/article${ request.url }`,
-      'content-length': 0,
-    });
-    response.end();
-  })
   .use('/', (request, response, next) => {
     function getFromCacheOrUrl(path) {
       const cacheInstance = cache(path);
@@ -121,10 +94,14 @@ server
 
     function generateDataRequirements(requestPath, id) {
       const articlepageRoute = new UrlPattern('/article/:id(/:slug)');
-      const isArticlepage = Boolean(articlepageRoute.match(requestPath));
-      const dataRequirements = [];
-      if (isArticlepage) {
+      const homepageRoute = new UrlPattern('/');
+      const isArticlePage = Boolean(articlepageRoute.match(requestPath));
+      const isHomepage = Boolean(homepageRoute.match(requestPath));
+      const dataRequirements = [ [] ];
+      if (isArticlePage) {
         dataRequirements.push(getFromCacheOrUrl(`/api/article/${ id }`));
+      } else if (isHomepage) {
+        dataRequirements.push(getFromCacheOrUrl('/api/homepage'));
       }
 
       return dataRequirements;
@@ -135,6 +112,7 @@ server
       return `var serverCache = ${ serialize(urlToDataObject) };`;
     }
 
+    /* eslint-disable consistent-return */
     match({ routes, location: request.url }, (matchError, redirectLocation, renderProps) => {
       if (matchError) {
         response.statusCode = httpStatus.INTERNAL_SERVER_ERROR;
@@ -146,7 +124,7 @@ server
         const dataRequirements = generateDataRequirements(requestPathname, id);
         const routeComponent = renderProps.routes[1].component || {};
         const isNotFound = routeComponent === NotFoundHandler;
-        const isArticlePage = routeComponent === ArticlePageHandler;
+        const isArticlePage = routeComponent === Article;
         if (isNotFound) {
           response.statusCode = httpStatus.NOT_FOUND;
         }
@@ -156,19 +134,19 @@ server
           if (listOfUrlDataTuples.length === 2 && listOfUrlDataTuples[1].length === 2 && listOfUrlDataTuples[1][1]) {
             mainContentData = listOfUrlDataTuples[1][1];
           }
+          if (isArticlePage && !slug) {
+            const sluggedUrl = `/article/${ mainContentData.id }/${ slugger(mainContentData.slug) }`;
+            response.writeHead(httpStatus.MOVED_PERMANENTLY, {
+              'Location': sluggedUrl,
+            });
+            response.end();
+            return true;
+          }
           const metaTags = mainContentData.metaTags || [];
           metaTags.forEach((metaItem) => {
             metaItem['data-meta'] = true;
           });
           const title = (metaTags.find((tag) => tag.property === 'og:title') || {}).content;
-          if (isArticlePage && !slug) {
-            const sluggedUrl = `/article/${ mainContentData.id }/${ slugger(mainContentData.slug) }`;
-            response.writeHead(httpStatus.MOVED_PERMANENTLY, {
-              'location': sluggedUrl,
-              'content-length': 0,
-            });
-            response.end();
-          }
           const meta = [
             {
               name: 'viewport',
@@ -212,6 +190,7 @@ server
         response.end(routeError.message);
       }
     });
+    /* eslint-enable consistent-return */
   })
   .use(server.log.errorLogger());
 

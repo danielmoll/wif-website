@@ -23,7 +23,7 @@ function App() {
 
 const TrackedApp = setupI13n(App, {
   rootModelData: {
-    product: 'The World In',
+    product: 'The World If',
   },
   isViewportEnabled: true,
 }, [ new ReactI13nOmniture(OmnitureConfig) ]);

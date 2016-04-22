@@ -1,6 +1,6 @@
 import React from 'react';
-// import Header from '@economist/component-header';
-// import Footer from '@economist/component-footer';
+import HeaderWithData from './header';
+import FooterWithData from './footer';
 import Cookie from '@economist/component-cookie-message';
 import CaptureClicks from './capture-clicks';
 
@@ -9,9 +9,9 @@ export default function AppTemplate({
 } = {}) {
   return (
     <CaptureClicks>
-      <header>Header</header>
+      <HeaderWithData />
       {children}
-      <footer>Footer</footer>
+      <FooterWithData />
       <Cookie />
     </CaptureClicks>
   );

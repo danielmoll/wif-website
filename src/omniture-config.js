@@ -1,8 +1,9 @@
+/* eslint-env browser */
 /* eslint-disable id-match */
 import slugger from 'slugger';
 import OmnitureUtils from '@economist/react-i13n-omniture/lib/OmnitureUtils';
-function slug(string) {
-  return slugger(String(string || ''), { replacement: '_' });
+function slug(stringToConvert) {
+  return slugger(String(stringToConvert || ''), { replacement: '_' });
 }
 
 const OmnitureConfig = {
@@ -36,26 +37,14 @@ const OmnitureConfig = {
     prop3: 'print',
     eVar3: 'print',
   },
-  // Set the URL of the Omniture script you want to use.
   /* eslint-disable arrow-body-style */
   externalScript: '/assets/omniture_h254.min.js',
   eventHandlers: {
     click: (nodeProps) => ({
-      // Just a fake manipulation
       linkType: nodeProps.product,
       linkName: nodeProps.element,
     }),
     pageview: (nodeProps) => {
-      // World In configuration
-      // prop1 is "the_world_if" for all pages (currently the world if section page prop 1 has "homepage"
-      // prop 2 should have issue date in the format of the rest of the site.
-      // prop3 is web
-      // prop4 - homepage should be "section|home"
-      // prop5 ONLY populates for content - articles, blogs, graphs, etc.
-      // Not for home page.
-      // Is prop 13 can be populated it would be helpful to overall tracking.
-      // this is the cookie reading to identify who users on the site are.
-      // Override default values
       let articleSource = {};
       if (nodeProps.articleSource) {
         articleSource = {
@@ -63,9 +52,6 @@ const OmnitureConfig = {
           eVar3: nodeProps.articleSource,
         };
       }
-      // template: 'article' or 'section|home'
-      // topic: e.g. 'Politics';
-      // Enforce with default values for nodeProps
       nodeProps = {
         product: '',
         topic: '',
@@ -75,7 +61,7 @@ const OmnitureConfig = {
       };
       let pageName = '';
       if (nodeProps.template === 'channel') {
-        pageName = `${slug(nodeProps.product)}|home`;
+        pageName = `${ slug(nodeProps.product) }|home`;
       } else {
         pageName = [
           slug(nodeProps.product),
